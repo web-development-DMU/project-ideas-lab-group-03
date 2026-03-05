@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Routes</title>
+    <link rel="stylesheet" href="/teams/GVN/team-introduction.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Group 03</h1>
+      <nav>
+        <a href="/">home</a>
+        <a href="/people">people</a>
+        <a href="/proposals">proposals</a>
+        <a href="/teams">teams</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Gym Programme Planner Routes</h2>
+        <p>
+          This page documents all planned application routes for the Gym
+          Programme Planner project (GVN team). Where database interactions
+          occur, routes may use SQL queries described in
+          <a style="font-weight: 500; color: #000000" href="/teams/GVN/db.html"
+            >db.html</a
+          >.
+        </p>
+
+        <hr />
+
+        <h3>Public / Navigation Routes</h3>
+
+        <h4>GET /index/login</h4>
+        <ul>
+          <li>
+            Displays the login form UI. User submits login details via
+            <strong>POST /index/login</strong>.
+          </li>
+        </ul>
+
+        <h4>POST /index/login</h4>
+        <ul>
+          <li>
+            Server receives login credentials, checks matching records using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            If match found: returns <strong>200 OK</strong> and redirects to
+            main page (<strong>303</strong>).
+          </li>
+          <li>
+            If no match: returns <strong>400</strong> (or <strong>401</strong>)
+            and shows an error message.
+          </li>
+        </ul>
+
+        <h4>GET /index/register</h4>
+        <ul>
+          <li>
+            Displays the registration form UI. User submits registration details
+            via <strong>POST /index/register</strong>.
+          </li>
+        </ul>
+
+        <h4>POST /index/register</h4>
+        <ul>
+          <li>
+            Server receives registration data, validates it, hashes the
+            password, and creates a new user record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            New users registered here are standard users (non-admin). Admin
+            accounts can only be created by an existing admin via
+            <strong>POST /admin/user/create</strong>.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            to login or main page.
+          </li>
+          <li>
+            Failure: <strong>400</strong> if email already exists / invalid
+            data.
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>User Exercise Routes</h3>
+
+        <h4>GET /index/exercise</h4>
+        <ul>
+          <li>Displays the exercise page UI (may include filters/search).</li>
+        </ul>
+
+        <h4>GET /index/exercise/view</h4>
+        <ul>
+          <li>
+            Retrieves all exercises stored in the system using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Returns <strong>200 OK</strong> with exercise list; page renders
+            exercise records.
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>User Routine Routes</h3>
+
+        <h4>GET /index/myRoutines</h4>
+        <ul>
+          <li>Displays the user's routines page UI.</li>
+        </ul>
+
+        <h4>GET /index/myRoutines/list</h4>
+        <ul>
+          <li>
+            Identifies the logged-in user and retrieves their created/saved
+            routines from the database using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Returns <strong>200 OK</strong> with routine list; page shows
+            routines with update/remove options.
+          </li>
+        </ul>
+
+        <h4>GET /index/myRoutines/create</h4>
+        <ul>
+          <li>
+            Displays a form to create a new routine (name, optional notes,
+            etc.).
+          </li>
+        </ul>
+
+        <h4>POST /index/myRoutines/create</h4>
+        <ul>
+          <li>
+            Creates a new routine for the logged-in user using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to routine list.
+          </li>
+        </ul>
+
+        <h4>GET /index/myRoutines/:routineId</h4>
+        <ul>
+          <li>
+            Displays a selected routine detail page (routine name + exercises
+            inside it) by retrieving routine data using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+        </ul>
+
+        <h4>GET /index/myRoutines/:routineId/edit</h4>
+        <ul>
+          <li>Displays the update routine page for a specific routine.</li>
+          <li>
+            Uses routineId to retrieve routine + exercises using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>User can add/remove exercises and update the routine details.</li>
+        </ul>
+
+        <h4>POST /index/myRoutines/:routineId/edit</h4>
+        <ul>
+          <li>
+            Submits edited routine data and updates the routine record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            to routine detail or list.
+          </li>
+        </ul>
+
+        <h4>POST /index/myRoutines/:routineId/delete</h4>
+        <ul>
+          <li>
+            Deletes a routine (or marks as deleted) for the logged-in user using
+            an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to routine list.
+          </li>
+        </ul>
+
+        <h4>POST /index/myRoutines/:routineId/exercises/add</h4>
+        <ul>
+          <li>
+            Adds an exercise to a routine (routineId + exerciseId sent in
+            form/body).
+          </li>
+          <li>
+            Uses an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >
+            to insert into routine-exercise relationship table.
+          </li>
+        </ul>
+
+        <h4>POST /index/myRoutines/:routineId/exercises/remove</h4>
+        <ul>
+          <li>
+            Removes an exercise from a routine (routineId + exerciseId sent in
+            form/body).
+          </li>
+          <li>
+            Uses an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >
+            to remove the relationship record.
+          </li>
+        </ul>
+
+        <hr />
+
+        <h3>Admin Routes / URLs</h3>
+        <p>
+          Admin routes require authentication and authorization. Non-admin users
+          should be blocked (e.g. <strong>403</strong>) or redirected away.
+        </p>
+
+        <p>
+          Admin access is restricted. Creating a new admin account is not
+          available through public registration. An existing admin must create
+          new admin users through <strong>GET /admin/user/create</strong> and
+          <strong>POST /admin/user/create</strong> (by selecting an admin role).
+        </p>
+
+        <h4>GET /admin</h4>
+        <ul>
+          <li>Displays the admin dashboard landing page.</li>
+        </ul>
+
+        <h4>-- User Management --</h4>
+
+        <h4>GET /admin/user</h4>
+        <ul>
+          <li>
+            Lists all users/members in the admin dashboard using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>Admin can update/remove users.</li>
+        </ul>
+
+        <h4>GET /admin/user/create</h4>
+        <ul>
+          <li>Displays admin form to create a new user.</li>
+        </ul>
+
+        <h4>POST /admin/user/create</h4>
+        <ul>
+          <li>
+            Creates a new user account in the database using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/user.
+          </li>
+          <li>
+            Failure: <strong>400</strong> if email already exists / invalid
+            data.
+          </li>
+        </ul>
+
+        <h4>GET /admin/user/:userId/edit</h4>
+        <ul>
+          <li>
+            Retrieves user details using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >
+            and displays an edit form.
+          </li>
+        </ul>
+
+        <h4>POST /admin/user/:userId/edit</h4>
+        <ul>
+          <li>
+            Updates user details using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/user.
+          </li>
+        </ul>
+
+        <h4>POST /admin/user/:userId/delete</h4>
+        <ul>
+          <li>
+            Removes a user (or disables account) using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/user.
+          </li>
+        </ul>
+
+        <h4>-- Routine Management --</h4>
+
+        <h4>GET /admin/routine</h4>
+        <ul>
+          <li>
+            Lists all routines in the admin dashboard using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>Admin can update/remove routines.</li>
+        </ul>
+
+        <h4>GET /admin/routine/create</h4>
+        <ul>
+          <li>Displays admin form to create a new routine template.</li>
+        </ul>
+
+        <h4>POST /admin/routine/create</h4>
+        <ul>
+          <li>
+            Creates a new routine record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/routine.
+          </li>
+        </ul>
+
+        <h4>GET /admin/routine/:routineId/edit</h4>
+        <ul>
+          <li>
+            Retrieves routine details using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >
+            and displays an edit form.
+          </li>
+        </ul>
+
+        <h4>POST /admin/routine/:routineId/edit</h4>
+        <ul>
+          <li>
+            Updates routine record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/routine.
+          </li>
+        </ul>
+
+        <h4>POST /admin/routine/:routineId/delete</h4>
+        <ul>
+          <li>
+            Deletes a routine using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/routine.
+          </li>
+        </ul>
+
+        <h4>-- Exercise Management --</h4>
+
+        <h4>GET /admin/exercise</h4>
+        <ul>
+          <li>
+            Lists all exercises in the admin dashboard using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>Admin can update/remove exercises.</li>
+        </ul>
+
+        <h4>GET /admin/exercise/create</h4>
+        <ul>
+          <li>Displays admin form to create a new exercise.</li>
+        </ul>
+
+        <h4>POST /admin/exercise/create</h4>
+        <ul>
+          <li>
+            Creates a new exercise record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/exercise.
+          </li>
+        </ul>
+
+        <h4>GET /admin/exercise/:exerciseId/edit</h4>
+        <ul>
+          <li>
+            Retrieves exercise details using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >
+            and displays an edit form.
+          </li>
+        </ul>
+
+        <h4>POST /admin/exercise/:exerciseId/edit</h4>
+        <ul>
+          <li>
+            Updates an exercise record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/exercise.
+          </li>
+        </ul>
+
+        <h4>POST /admin/exercise/:exerciseId/delete</h4>
+        <ul>
+          <li>
+            Deletes an exercise record using an
+            <a
+              style="font-weight: 500; color: #000000"
+              href="/teams/GVN/db.html"
+              >SQL query</a
+            >.
+          </li>
+          <li>
+            Success: <strong>200 OK</strong> and redirect (<strong>303</strong>)
+            back to /admin/exercise.
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
